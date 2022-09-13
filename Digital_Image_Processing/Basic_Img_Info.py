@@ -15,7 +15,7 @@ def main():
     for i in range(row):
         for j in range(col):
             if grayscale[i, j] >= threshold:
-                binary[i, j] = 2566
+                binary[i, j] = 255
 
     img_set = [rgb, r, g, b, grayscale, binary]
     title_set = ['RGB', 'Red', 'Green', 'Blue', 'Grayscale', 'Binary']

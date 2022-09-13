@@ -1,42 +1,48 @@
 import matplotlib.pyplot as plt
-import cv2
+import numpy as np
 
 
 def main():
-    rgb = plt.imread('/home/harun/Image_Processing/rose.jpg')
+    rgb = plt.imread('rose.jpg')
+    grayscale = rgb_to_grayscale(rgb)
 
-    ''' RGB to Grayscale '''
-    grayscale = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
-    resize_img = cv2.resize(grayscale, (200, 200))
+    plot_hist(grayscale)
 
+
+def rgb_to_grayscale(rgb):
+    red, green, blue = rgb[:, :, 0], rgb[:, :, 1], rgb[:, :, 2]
+
+    graysclae = red * 0.2989 + green * 0.5870 + blue * 0.1140
+    graysclae = graysclae.astype(int)
+
+    return graysclae
+
+
+def custom_hist(img):
+    img = img.reshape(-1)
+    num_of_pixels = np.zeros((256,), dtype=int)
+
+    for i in range(len(img)):
+        num_of_pixels[img[i]] += 1
+
+    return [num_of_pixels, range(256)]
+
+
+def plot_hist(img):
     plt.figure(figsize=(15, 15))
 
-    ''' Built-in Histogram '''
     plt.subplot(1, 2, 1)
-    plt.hist(resize_img.ravel(), 256, [0, 256])
     plt.title('Built-in Histogram')
     plt.xlabel('Intensity')
     plt.ylabel('Number of Pixels')
-
-    ''' Custom Histogram '''
-    row, col = resize_img.shape
-    intensity = range(256)
-    num_of_pixels = []
-
-    for val in range(256):
-        cnt = 0
-
-        for i in range(row):
-            for j in range(col):
-                if resize_img[i, j] == val:
-                    cnt = cnt + 1
-        num_of_pixels.append(cnt)
+    plt.hist(img.ravel(), 256, [0, 256])
 
     plt.subplot(1, 2, 2)
-    plt.title('Custom Histogram')
+    plt.title('CUstom Histogram')
     plt.xlabel('Intensity')
     plt.ylabel('Number of Pixels')
-    plt.stem(intensity, num_of_pixels, markerfmt='')
+    num_of_pixels, intensity = custom_hist(img)
+    plt.bar(intensity, num_of_pixels, width=1.01)
 
     plt.show()
 
