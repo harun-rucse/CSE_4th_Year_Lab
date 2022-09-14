@@ -24,9 +24,22 @@ def main():
     '''Custom Dilation'''
     custom_dilation = custom_dilate(binary, structureElement)
 
-    img_set = [binary, erosion, custom_erosion, dilation, custom_dilation]
+    '''Built-in Opening'''
+    opening = cv2.dilate(erosion, structureElement, iterations=1)
+
+    '''Custom Opening'''
+    custom_opening = custom_dilate(custom_erosion, structureElement)
+
+    '''Built-in Closing'''
+    closing = cv2.erode(dilation, structureElement, iterations=1)
+
+    '''Custom Closing'''
+    custom_closing = custom_erode(custom_dilation, structureElement)
+
+    img_set = [binary, erosion, custom_erosion, dilation,
+               custom_dilation, opening, custom_opening, closing, custom_closing]
     title_set = ['Binary', 'Built in Erosion',
-                 'Custom Erosion', 'Built in Dilation', 'Custom Dilation']
+                 'Custom Erosion', 'Built in Dilation', 'Custom Dilation', 'Built in Opening', 'Custom Opening', 'Built in Cosing', 'Custom Closing']
     plot_img(img_set, title_set)
 
 
@@ -119,7 +132,7 @@ def plot_img(img_set, title_set):
     plt.figure(figsize=(15, 15))
 
     for i in range(n):
-        plt.subplot(2, 3, i+1)
+        plt.subplot(3, 3, i+1)
         plt.title(title_set[i])
 
         ch = len(img_set[i].shape)
