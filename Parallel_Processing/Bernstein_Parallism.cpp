@@ -27,10 +27,11 @@ int main()
 
         // separate input set
         int indx = 0;
-        for (int j = 5; j < instruction.size(); j = j + 2)
-        {
-            input_set[i][indx] = instruction[j];
-            indx++;
+        for(int j=5; j<instruction.size(); j++) {
+            if((instruction[j] >= 'a' && instruction[j] <= 'z') || (instruction[j] >= 'A' && instruction[j] <= 'Z')) {
+                input_set[i][indx] = instruction[j];
+                indx++;
+            }
         }
         input_len[i] = indx;
 
@@ -54,23 +55,23 @@ int main()
                 iteration++;
             }
                 
-            for (int k=0; k < input_len[i]; k++)
-            {
-                // check Input1 n Output2
-                if (input_set[i][k] == output_set[j]) {
+            for(int k=0; k<input_len[i]; k++) {
+                // I1 == O2
+                if(input_set[i][k] == output_set[j]) {
                     condition = false;
-                    
-                    dependency[iteration] = "P" + to_string(i+1) + " Anti Dependent on P" + to_string(j+1);
+
+                    dependency[iteration] = "P"+to_string(i+1) + " Anti dependent on " + "P" + to_string(j+1);
                     iteration++;
                 }
-
-                // check Output1 n Input2
-                if (output_set[i] == input_set[j][k]) {
+            }
+            for(int k=0; k<input_len[j]; k++) {
+                // O1 == I2
+                if(output_set[i] == input_set[j][k]) {
                     condition = false;
-                    
-                    dependency[iteration] = "P" + to_string(i+1) + " Flow Dependent on P" + to_string(j+1);
+
+                    dependency[iteration] = "P"+to_string(i+1) + " Flow dependent on " + "P" + to_string(j+1);
                     iteration++;
-                } 
+                }
             }
 
             if (condition)
